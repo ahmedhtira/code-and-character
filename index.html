@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Code &amp; Character — Studio de produits numériques</title>
+<meta name="description" content="Code & Character conçoit et développe des produits numériques utiles, distinctifs et pensés pour durer." />
+<meta property="og:title" content="Code & Character — Studio de produits numériques" />
+<meta property="og:description" content="Code & Character conçoit et développe des produits numériques utiles, distinctifs et pensés pour durer." />
+<meta property="og:type" content="website" />
+<meta property="og:locale" content="fr_FR" />
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<style>
+:root {
+  --canvas: #ece8de;
+  --paper: #f8f5ed;
+  --ink: #181713;
+  --night: #1c252b;
+  --muted: #6c685f;
+  --line: rgba(24, 23, 19, 0.17);
+  --wine: #6f263d;
+  --wine-deep: #4c1829;
+  --brass: #ad8756;
+  --serif: "Iowan Old Style", "Baskerville", "Times New Roman", serif;
+  --mono: "Cascadia Code", "SFMono-Regular", Consolas, monospace;
+  --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--canvas); color: var(--ink); font-family: var(--sans); font-size: 16px; -webkit-font-smoothing: antialiased; }
+body::before { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: 0.12; z-index: 30; background-image: radial-gradient(rgba(24,23,19,.2) .4px, transparent .55px); background-size: 5px 5px; }
+a { color: inherit; text-decoration: none; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; }
+img { display: block; max-width: 100%; }
+
+.site-header { width: min(1480px, calc(100% - 72px)); margin: 0 auto; min-height: 94px; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; border-bottom: 1px solid var(--line); position: relative; z-index: 10; animation: fadeInDown .7s cubic-bezier(.22,1,.36,1) both; }
+.brand { display: inline-flex; width: max-content; }
+.wordmark { display: inline-flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+.wordmark-code { font-family: var(--mono); font-size: .73rem; font-weight: 750; letter-spacing: .08em; }
+.wordmark-amp { color: var(--wine); font-family: var(--serif); font-size: 1.22rem; font-style: italic; line-height: 1; }
+.wordmark-character { font-family: var(--serif); font-size: 1rem; font-style: italic; font-weight: 600; letter-spacing: -.035em; }
+nav { display: flex; align-items: center; gap: 34px; font-size: .78rem; color: var(--muted); }
+nav a { position: relative; padding: 11px 0; }
+nav a::after { content: ""; position: absolute; height: 1px; left: 0; right: 100%; bottom: 4px; background: var(--wine); transition: right 260ms ease; }
+nav a:hover::after, nav a:focus-visible::after { right: 0; }
+.header-cta { justify-self: end; display: inline-flex; align-items: center; gap: 12px; font-size: .76rem; font-weight: 700; }
+.header-cta span { color: var(--wine); font-size: 1rem; }
+
+.hero { width: min(1480px, calc(100% - 72px)); margin: 0 auto; min-height: calc(100vh - 94px); display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(420px, .65fr); align-items: center; gap: clamp(50px, 7vw, 116px); padding: 88px 0 116px; }
+.eyebrow { margin: 0 0 24px; text-transform: uppercase; letter-spacing: .18em; font-size: .64rem; font-weight: 750; color: var(--wine); }
+.hero h1, .section-heading h2, .studio-statement h2, .contact-intro h2, .closing-section h2 { font-family: var(--serif); font-weight: 400; letter-spacing: -.06em; line-height: .92; margin: 0; }
+.hero h1 { font-size: clamp(4.5rem, 7.9vw, 8.7rem); max-width: 1080px; animation: fadeInUp .9s cubic-bezier(.22,1,.36,1) .22s both; }
+.hero .eyebrow { animation: fadeInUp .6s ease .12s both; }
+.hero h1 span { display: block; color: var(--wine); font-style: italic; }
+.hero-bottom { display: flex; align-items: flex-end; gap: 48px; margin-top: 56px; padding-left: clamp(0px, 7vw, 118px); animation: fadeInUp .75s ease .44s both; }
+.hero-bottom p { margin: 0; max-width: 610px; color: var(--muted); line-height: 1.74; font-size: .96rem; }
+.primary-button { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: space-between; gap: 28px; min-width: 190px; min-height: 54px; padding: 0 22px; border: 1px solid var(--ink); background: transparent; color: var(--ink); font-size: .78rem; font-weight: 700; cursor: pointer; transition: color 220ms ease, background 220ms ease, border-color 220ms ease, transform 220ms ease; }
+.primary-button:hover, .primary-button:focus-visible { background: var(--wine); border-color: var(--wine); color: var(--paper); transform: translateY(-2px); }
+.primary-button span { color: var(--brass); font-size: 1rem; }
+
+.character-stage { justify-self: end; width: min(100%, 510px); min-height: 610px; padding: 25px; background: var(--paper); border: 1px solid var(--ink); display: grid; grid-template-rows: auto 1fr auto; gap: 20px; position: relative; overflow: hidden; animation: fadeInUp 1s cubic-bezier(.22,1,.36,1) .28s both; }
+.character-stage::before { content: ""; position: absolute; inset: 58px 24px 88px; background-image: linear-gradient(to right, transparent calc(25% - .5px), rgba(24,23,19,.08) calc(25% - .5px), rgba(24,23,19,.08) 25%, transparent 25%), linear-gradient(to bottom, transparent calc(25% - .5px), rgba(24,23,19,.08) calc(25% - .5px), rgba(24,23,19,.08) 25%, transparent 25%); background-size: 25% 25%; pointer-events: none; }
+.stage-label { display: flex; align-items: center; gap: 10px; position: relative; z-index: 2; font-family: var(--mono); font-size: .56rem; letter-spacing: .14em; color: var(--muted); }
+.stage-label span { color: var(--wine); }
+.stage-label i { width: 42px; height: 1px; background: var(--line); }
+.type-specimen { align-self: center; position: relative; z-index: 2; min-height: 360px; display: flex; flex-direction: column; justify-content: center; }
+.specimen-code { align-self: flex-start; font-family: var(--mono); font-size: clamp(3.6rem, 6.5vw, 6.7rem); font-weight: 700; letter-spacing: -.08em; line-height: .82; transition: letter-spacing 420ms cubic-bezier(.22,1,.36,1); }
+.specimen-code:hover { letter-spacing: .08em; }
+.specimen-amp { align-self: center; margin: -0.06em 0 -0.18em; color: var(--brass); font-family: var(--serif); font-size: clamp(7rem, 12vw, 12rem); font-style: italic; line-height: .78; position: relative; z-index: 3; }
+.specimen-character { align-self: flex-end; color: var(--wine); font-family: var(--serif); font-size: clamp(3.2rem, 6vw, 6.2rem); font-style: italic; letter-spacing: -.07em; line-height: .85; transition: transform 420ms cubic-bezier(.22,1,.36,1); }
+.specimen-character:hover { transform: translateX(8px); }
+.stage-output { position: relative; z-index: 2; display: grid; gap: 8px; border-top: 1px solid var(--line); padding-top: 17px; }
+.stage-output span { color: var(--wine); font-family: var(--mono); font-size: .55rem; letter-spacing: .15em; }
+.stage-output strong { font-family: var(--serif); font-size: 1.22rem; font-style: italic; font-weight: 400; }
+
+.manifesto-strip { min-height: 58px; display: flex; align-items: center; justify-content: center; gap: clamp(18px, 3.2vw, 54px); padding: 14px 36px; background: var(--night); color: rgba(248,245,237,.82); font-family: var(--mono); font-size: .58rem; font-weight: 650; letter-spacing: .14em; overflow: hidden; white-space: nowrap; }
+.manifesto-strip i { color: var(--brass); font-family: var(--serif); font-size: 1rem; font-style: normal; }
+
+.projects-section, .approach-section, .studio-section, .contact-section, .closing-section { padding: 132px max(36px, calc((100vw - 1480px) / 2)); }
+.projects-section { background: var(--paper); border-bottom: 1px solid var(--line); }
+.section-heading { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 80px; align-items: end; margin-bottom: 72px; }
+.section-heading h2 { font-size: clamp(3.4rem, 6vw, 6.5rem); max-width: 920px; }
+.section-intro { color: var(--muted); line-height: 1.76; max-width: 540px; margin: 0 0 8px; }
+.projects-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 24px; }
+.project-card { grid-column: 1 / -1; background: var(--canvas); border: 1px solid var(--line); overflow: hidden; display: grid; grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr); min-height: 710px; box-shadow: 0 28px 70px rgba(24,23,19,.06); }
+.project-visual { background: var(--night); color: var(--paper); padding: 27px; display: flex; flex-direction: column; min-width: 0; position: relative; overflow: hidden; }
+.project-visual::before { content: "01"; position: absolute; right: -16px; bottom: -68px; color: transparent; -webkit-text-stroke: 1px rgba(248,245,237,.12); font-family: var(--serif); font-size: 20rem; line-height: 1; }
+.project-meta-bar { display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: .15em; font-family: var(--mono); font-size: .58rem; position: relative; z-index: 2; }
+.live-status { display: flex; align-items: center; gap: 8px; }
+.live-status i { width: 6px; height: 6px; border-radius: 50%; background: #a9c7ac; box-shadow: 0 0 0 5px rgba(169,199,172,.1); }
+.project-browser { margin: auto 0; background: white; overflow: hidden; box-shadow: 0 34px 82px rgba(0,0,0,.28); position: relative; z-index: 2; transform-origin: center; transition: transform 450ms ease; }
+.project-browser:hover { transform: scale(1.018); }
+.browser-bar { height: 35px; background: #e9eceb; display: flex; align-items: center; gap: 6px; padding: 0 12px; color: #60706d; }
+.browser-bar i { width: 7px; height: 7px; border-radius: 50%; background: #a9b3b1; }
+.browser-bar span { margin-left: auto; margin-right: auto; font-family: var(--mono); font-size: .52rem; letter-spacing: .04em; }
+.project-browser img { width: 100%; aspect-ratio: 16/9; object-fit: cover; object-position: top; }
+.visual-caption { position: relative; z-index: 2; font-family: var(--mono); font-size: .57rem; letter-spacing: .13em; text-transform: uppercase; color: rgba(248,245,237,.58); }
+.project-content { padding: clamp(42px, 5vw, 76px); display: flex; flex-direction: column; justify-content: center; }
+.project-logo { width: 126px; height: auto; margin-bottom: 35px; }
+.project-category { margin: 0 0 18px; text-transform: uppercase; color: var(--wine); letter-spacing: .15em; font-family: var(--mono); font-size: .59rem; font-weight: 750; }
+.project-content h3 { margin: 0; font-family: var(--serif); font-size: clamp(2.7rem, 4.2vw, 4.75rem); font-weight: 400; letter-spacing: -.052em; line-height: .98; }
+.project-description { color: var(--muted); line-height: 1.72; margin: 28px 0; }
+.feature-list { list-style: none; padding: 0; margin: 0 0 38px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; }
+.feature-list li { font-size: .76rem; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.feature-list li::before { content: "—"; color: var(--wine); margin-right: 9px; }
+.project-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 24px; }
+.text-button { border: 0; background: transparent; display: inline-flex; gap: 10px; align-items: center; padding: 12px 0; font-size: .8rem; font-weight: 700; cursor: pointer; color: var(--ink); }
+.text-button::after { content: ""; width: 0; height: 1px; background: var(--wine); transition: width 250ms ease; }
+.text-button:hover::after, .text-button:focus-visible::after { width: 24px; }
+.play-icon { color: var(--wine); font-size: .62rem; }
+.grid-ready { display: grid; grid-template-columns: minmax(80px, 1fr) auto auto; align-items: center; gap: 24px; margin-top: 36px; color: var(--muted); font-family: var(--mono); font-size: .63rem; }
+.grid-ready-line { height: 1px; background: var(--line); }
+.grid-ready p { margin: 0; }
+.grid-ready > span:last-child { color: var(--wine); font-family: var(--serif); font-size: 1.05rem; font-style: italic; }
+
+.approach-section { background: var(--canvas); }
+.approach-heading { margin-bottom: 90px; }
+.process-grid { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.process-step { min-height: 355px; padding: 29px 30px 30px 0; border-right: 1px solid var(--line); display: flex; flex-direction: column; }
+.process-step + .process-step { padding-left: 30px; }
+.process-step:last-child { border-right: 0; }
+.step-number { color: var(--wine); font-family: var(--mono); font-size: .61rem; }
+.step-rule { margin: auto 0 30px; width: 100%; display: flex; align-items: center; gap: 12px; }
+.step-rule::before { content: ""; width: 8px; height: 8px; border: 1px solid var(--brass); border-radius: 50%; }
+.step-rule i { display: block; height: 1px; flex: 1; background: var(--line); }
+.process-step h3 { font-family: var(--serif); font-size: 2.15rem; font-weight: 400; margin: 0 0 13px; }
+.process-step p { color: var(--muted); line-height: 1.65; font-size: .84rem; margin: 0; max-width: 270px; }
+
+.studio-section { background: var(--night); color: var(--paper); display: grid; grid-template-columns: 1.2fr .8fr; gap: 104px; align-items: end; position: relative; overflow: hidden; }
+.studio-section::after { content: "&"; position: absolute; right: -35px; top: -180px; color: transparent; -webkit-text-stroke: 1px rgba(173,135,86,.14); font-family: var(--serif); font-size: 39rem; font-style: italic; line-height: 1; }
+.studio-section .eyebrow { color: var(--brass); }
+.studio-statement, .studio-copy { position: relative; z-index: 2; }
+.studio-statement h2 { font-size: clamp(3.3rem, 5.9vw, 6.8rem); }
+.studio-statement h2 em { color: #c29b69; font-weight: 400; }
+.studio-copy { color: rgba(248,245,237,.65); font-size: .98rem; line-height: 1.8; max-width: 540px; }
+.studio-copy p { margin: 0; }
+.studio-copy p + p { margin-top: 23px; }
+.studio-copy .studio-note { color: #c29b69; font-family: var(--mono); font-size: .61rem; font-weight: 650; letter-spacing: .15em; text-transform: uppercase; }
+
+.contact-section { background: var(--paper); display: grid; grid-template-columns: minmax(0, .82fr) minmax(500px, 1.18fr); gap: clamp(72px, 10vw, 150px); border-bottom: 1px solid var(--line); }
+.contact-intro h2 { font-size: clamp(3.3rem, 5.6vw, 6.2rem); }
+.contact-intro > p:not(.eyebrow) { max-width: 570px; margin: 34px 0 50px; color: var(--muted); line-height: 1.78; }
+.contact-promises { border-top: 1px solid var(--line); }
+.contact-promises span { min-height: 52px; display: flex; align-items: center; gap: 18px; border-bottom: 1px solid var(--line); font-size: .76rem; }
+.contact-promises i { color: var(--wine); font-family: var(--mono); font-size: .6rem; font-style: normal; }
+.contact-form-wrap { align-self: end; }
+.contact-form { padding: clamp(30px, 4vw, 54px); border: 1px solid var(--line); background: var(--canvas); box-shadow: 0 26px 70px rgba(24,23,19,.07); }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.contact-form label { display: grid; gap: 11px; margin-bottom: 25px; }
+.contact-form label > span { font-family: var(--mono); font-size: .59rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--wine-deep); }
+.contact-form label em { font-family: var(--sans); font-weight: 500; color: var(--muted); text-transform: none; letter-spacing: 0; margin-left: 5px; }
+.contact-form input, .contact-form select, .contact-form textarea { width: 100%; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: transparent; color: var(--ink); padding: 11px 0 13px; outline: none; font-family: var(--sans); font-size: .9rem; transition: border-color 220ms ease; }
+.contact-form input:focus, .contact-form select:focus, .contact-form textarea:focus { border-color: var(--wine); }
+.contact-form textarea { resize: vertical; min-height: 138px; line-height: 1.6; }
+.contact-form select { cursor: pointer; }
+.contact-form ::placeholder { color: #8d8980; opacity: 1; }
+.form-submit-row { display: flex; align-items: center; justify-content: space-between; gap: 30px; margin-top: 10px; }
+.form-submit-row > p { max-width: 310px; margin: 0; color: var(--muted); font-size: .67rem; line-height: 1.55; }
+.form-submit-row .primary-button { min-width: 220px; }
+.form-preview-message { margin: 24px 0 0; padding: 14px 16px; border-left: 2px solid var(--wine); background: rgba(111,38,61,.06); color: var(--wine-deep); font-size: .76rem; line-height: 1.55; }
+
+.closing-section { min-height: 680px; display: grid; grid-template-columns: 1fr auto; align-items: center; position: relative; overflow: hidden; }
+.closing-section h2 { font-size: clamp(4.2rem, 8vw, 9rem); }
+.closing-section h2 em { color: var(--wine); font-weight: 400; }
+.closing-amp { position: relative; z-index: 2; color: transparent; -webkit-text-stroke: 1px var(--brass); width: clamp(160px, 17vw, 250px); aspect-ratio: 1; display: grid; place-items: center; font-family: var(--serif); font-size: clamp(8rem, 14vw, 14rem); font-style: italic; line-height: 1; }
+footer { width: min(1480px, calc(100% - 72px)); margin: 0 auto; min-height: 112px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 30px; font-size: .72rem; color: var(--muted); }
+.footer-brand { color: var(--ink); }
+.wordmark-footer .wordmark-code { font-size: .67rem; }
+.wordmark-footer .wordmark-character { font-size: .88rem; }
+footer p { margin: 0; font-family: var(--serif); font-style: italic; }
+.footer-links { justify-self: end; display: flex; gap: 24px; }
+
+.video-backdrop { position: fixed; inset: 0; z-index: 100; background: rgba(20,21,18,.84); backdrop-filter: blur(14px); display: none; place-items: center; padding: 32px; animation: fadeIn .28s ease; }
+.video-backdrop.open { display: grid; }
+.video-dialog { width: min(1180px, 100%); background: var(--paper); overflow: hidden; box-shadow: 0 38px 110px rgba(0,0,0,.38); }
+.video-dialog-header { min-height: 78px; padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
+.video-dialog-header > div { display: grid; gap: 5px; }
+.video-dialog-header span { color: var(--wine); font-family: var(--mono); font-size: .55rem; letter-spacing: .16em; text-transform: uppercase; }
+.video-dialog-header strong { font-family: var(--serif); font-size: 1.25rem; font-weight: 400; }
+.video-dialog-header button { width: 42px; height: 42px; border: 1px solid var(--line); background: transparent; border-radius: 50%; font-size: 1.5rem; cursor: pointer; transition: background 200ms ease, color 200ms ease; }
+.video-dialog-header button:hover, .video-dialog-header button:focus-visible { background: var(--ink); color: var(--paper); }
+.video-dialog video { display: block; width: 100%; aspect-ratio: 16/9; background: #0b0d0c; }
+:focus-visible { outline: 2px solid var(--wine); outline-offset: 4px; }
+
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-16px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity .72s cubic-bezier(.22,1,.36,1), transform .72s cubic-bezier(.22,1,.36,1); }
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1100px) {
+  .site-header { grid-template-columns: 1fr auto; }
+  nav { display: none; }
+  .hero { grid-template-columns: 1fr; padding-top: 100px; }
+  .character-stage { width: min(82vw, 600px); justify-self: center; min-height: 580px; }
+  .project-card { grid-template-columns: 1fr; }
+  .project-visual { min-height: 600px; }
+  .studio-section { grid-template-columns: 1fr; }
+  .contact-section { grid-template-columns: 1fr; }
+  .process-grid { grid-template-columns: 1fr 1fr; }
+  .process-step:nth-child(2) { border-right: 0; }
+  .process-step:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .process-step:nth-child(3) { padding-left: 0; }
+}
+
+@media (max-width: 720px) {
+  .site-header, .hero, footer { width: min(100% - 36px, 1480px); }
+  .site-header { min-height: 76px; }
+  .wordmark { gap: 5px; }
+  .wordmark-code { font-size: .62rem; }
+  .wordmark-character { font-size: .82rem; }
+  .header-cta { font-size: 0; gap: 0; }
+  .header-cta span { font-size: 1rem; }
+  .hero { min-height: auto; padding: 80px 0 88px; gap: 76px; }
+  .hero h1 { font-size: clamp(3.55rem, 17vw, 5.6rem); }
+  .hero-bottom { display: grid; padding-left: 0; gap: 28px; margin-top: 38px; }
+  .character-stage { width: 100%; min-height: 500px; padding: 18px; }
+  .type-specimen { min-height: 320px; gap: 6px; }
+  .specimen-code { font-size: 4rem; }
+  .specimen-amp { align-self: center; font-size: 5.5rem; margin: 0; }
+  .specimen-character { font-size: 4rem; }
+  .manifesto-strip { justify-content: flex-start; overflow: hidden; padding-inline: 18px; }
+  .manifesto-strip span:nth-of-type(n+3), .manifesto-strip i:nth-of-type(n+3) { display: none; }
+  .projects-section, .approach-section, .studio-section, .contact-section, .closing-section { padding: 92px 18px; }
+  .section-heading { grid-template-columns: 1fr; gap: 28px; margin-bottom: 48px; }
+  .section-heading h2 { font-size: 3.5rem; }
+  .project-visual { padding: 18px; min-height: 420px; }
+  .project-content { padding: 40px 24px 46px; }
+  .project-content h3 { font-size: 3rem; }
+  .feature-list { grid-template-columns: 1fr; }
+  .project-actions { align-items: stretch; flex-direction: column; }
+  .project-actions .primary-button { width: 100%; }
+  .text-button { justify-content: center; }
+  .grid-ready { grid-template-columns: 1fr auto; }
+  .grid-ready-line { grid-column: 1 / -1; }
+  .process-grid { grid-template-columns: 1fr; border-bottom: 0; }
+  .process-step, .process-step + .process-step { min-height: 245px; padding: 24px 0; border-right: 0; border-top: 1px solid var(--line); }
+  .process-grid { border-top: 0; }
+  .step-rule { margin: 42px 0 26px; }
+  .studio-section { gap: 50px; }
+  .studio-statement h2 { font-size: 3.85rem; }
+  .contact-section { gap: 56px; }
+  .contact-intro h2 { font-size: 3.7rem; }
+  .contact-form { padding: 28px 20px; }
+  .form-row { grid-template-columns: 1fr; gap: 0; }
+  .form-submit-row { align-items: stretch; flex-direction: column; }
+  .form-submit-row .primary-button { width: 100%; }
+  .closing-section { min-height: 640px; grid-template-columns: 1fr; align-content: center; gap: 70px; }
+  .closing-section h2 { font-size: 4.6rem; }
+  .closing-amp { width: 130px; justify-self: end; }
+  footer { grid-template-columns: 1fr auto; padding: 30px 0; }
+  footer p { display: none; }
+  .footer-links a:first-child { display: none; }
+  .video-backdrop { padding: 12px; }
+  .video-dialog-header strong { font-size: 1rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+<noscript><style>.reveal { opacity: 1 !important; transform: none !important; }</style></noscript>
+</head>
+<body>
+<main>
+
+<header class="site-header">
+  <a class="brand" href="#top" aria-label="Code &amp; Character, accueil">
+    <span class="wordmark" aria-label="Code &amp; Character">
+      <span class="wordmark-code">CODE</span>
+      <span class="wordmark-amp" aria-hidden="true">&amp;</span>
+      <span class="wordmark-character">CHARACTER</span>
+    </span>
+  </a>
+  <nav aria-label="Navigation principale">
+    <a href="#projects">Projets</a>
+    <a href="#approach">Approche</a>
+    <a href="#studio">Studio</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <a class="header-cta" href="#contact">Un projet ? <span aria-hidden="true">↘</span></a>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-copy">
+    <p class="eyebrow">Studio indépendant · Design &amp; développement</p>
+    <h1>Des produits numériques<span>avec du caractère.</span></h1>
+    <div class="hero-bottom">
+      <p>Nous concevons nos propres plateformes et accompagnons les entreprises qui veulent transformer une bonne idée en une expérience claire, utile et mémorable.</p>
+      <a class="primary-button" href="#projects">Voir le travail <span aria-hidden="true">↘</span></a>
+    </div>
+  </div>
+
+  <div class="character-stage" aria-label="Composition typographique représentant le code et le caractère">
+    <div class="stage-label"><span>STUDIO NOTE Nº 01</span><i></i>TUNIS</div>
+    <div class="type-specimen" aria-hidden="true">
+      <span class="specimen-code">CODE</span>
+      <span class="specimen-amp">&amp;</span>
+      <span class="specimen-character">Character</span>
+    </div>
+    <div class="stage-output">
+      <span>PRECISION / PERSONALITY</span>
+      <strong>Made to work. Made to be remembered.</strong>
+    </div>
+  </div>
+</section>
+
+<div class="manifesto-strip" aria-label="Principes du studio">
+  <span>USEFUL BY DESIGN</span><i>·</i><span>BUILT TO LAST</span><i>·</i><span>NEVER GENERIC</span><i>·</i><span>HUMAN AT HEART</span>
+</div>
+
+<section class="projects-section" id="projects">
+  <div class="section-heading reveal">
+    <div>
+      <p class="eyebrow">Projets sélectionnés</p>
+      <h2>Des idées devenues réelles.</h2>
+    </div>
+    <p class="section-intro">Une grille vivante pour les produits que nous lançons et ceux que nous construisons avec nos clients. Chaque projet garde sa propre voix.</p>
+  </div>
+
+  <div class="projects-grid" aria-label="Liste des projets">
+    <article class="project-card project-card-featured">
+      <div class="project-visual">
+        <div class="project-meta-bar">
+          <span>Projet 01</span>
+          <span class="live-status"><i></i> En ligne</span>
+        </div>
+        <div class="project-browser">
+          <div class="browser-bar"><i></i><i></i><i></i><span>dewini.net</span></div>
+          <img src="assets/dewini-home.png" alt="Aperçu de la page d’accueil de Dewini" />
+        </div>
+        <span class="visual-caption">Santé numérique · Web · FR/AR</span>
+      </div>
+
+      <div class="project-content">
+        <img class="project-logo" src="assets/dewini-logo.png" alt="Dewini" />
+        <p class="project-category">Plateforme de rendez-vous médicaux</p>
+        <h3>Simplifier le lien entre patients et médecins.</h3>
+        <p class="project-description">Dewini accompagne les patients dans la recherche et la réservation d’un rendez-vous, tout en offrant aux médecins un espace clair pour organiser leur agenda, leurs horaires et leurs disponibilités.</p>
+        <ul class="feature-list">
+          <li>Recherche médicale simplifiée</li>
+          <li>Réservation de rendez-vous</li>
+          <li>Agenda et disponibilités médecins</li>
+          <li>Expérience bilingue français–arabe</li>
+        </ul>
+        <div class="project-actions">
+          <a class="primary-button" href="https://dewini.net" target="_blank" rel="noopener noreferrer">Visiter Dewini <span aria-hidden="true">↗</span></a>
+          <button class="text-button" type="button" id="watchFilmBtn"><span class="play-icon" aria-hidden="true">▶</span> Voir le film</button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="grid-ready reveal">
+    <span class="grid-ready-line"></span>
+    <p>La grille est prête pour les prochains projets.</p>
+    <span>01 — ∞</span>
+  </div>
+</section>
+
+<section class="approach-section" id="approach">
+  <div class="section-heading approach-heading reveal">
+    <div>
+      <p class="eyebrow">Notre méthode</p>
+      <h2>Une idée. Quatre mouvements.</h2>
+    </div>
+    <p class="section-intro">Assez de méthode pour avancer avec précision. Assez de liberté pour que le résultat ne ressemble pas à tout le reste.</p>
+  </div>
+
+  <div class="process-grid">
+    <div class="process-step reveal">
+      <span class="step-number">01</span>
+      <div class="step-rule" aria-hidden="true"><i></i></div>
+      <h3>Décoder</h3>
+      <p>Comprendre le vrai problème, les usages et ce qui mérite d’être construit.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:.08s">
+      <span class="step-number">02</span>
+      <div class="step-rule" aria-hidden="true"><i></i></div>
+      <h3>Dessiner</h3>
+      <p>Donner à l’idée une structure claire, une voix et une expérience cohérente.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:.16s">
+      <span class="step-number">03</span>
+      <div class="step-rule" aria-hidden="true"><i></i></div>
+      <h3>Développer</h3>
+      <p>Transformer la direction choisie en un produit rapide, fiable et précis.</p>
+    </div>
+    <div class="process-step reveal" style="transition-delay:.24s">
+      <span class="step-number">04</span>
+      <div class="step-rule" aria-hidden="true"><i></i></div>
+      <h3>Déployer</h3>
+      <p>Mettre le produit en ligne, observer son usage et continuer à l’améliorer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="studio-section" id="studio">
+  <div class="studio-statement reveal">
+    <p class="eyebrow">Code &amp; Character</p>
+    <h2>Le code fait fonctionner.<br /><em>Le caractère fait choisir.</em></h2>
+  </div>
+  <div class="studio-copy reveal" style="transition-delay:.12s">
+    <p class="studio-note">Deux regards. Une même exigence.</p>
+    <p>Nous sommes un studio numérique indépendant qui réunit conception, design et développement. Nous créons nos propres produits et travaillons directement avec les personnes derrière chaque projet.</p>
+    <p>Notre ambition est simple : construire des expériences solides dans leur code, distinctes dans leur expression et agréables pour les personnes qui les utilisent.</p>
+  </div>
+</section>
+
+<section class="contact-section" id="contact">
+  <div class="contact-intro reveal">
+    <p class="eyebrow">Votre projet</p>
+    <h2>Construisons quelque chose qui mérite d’exister.</h2>
+    <p>Une idée, un besoin précis ou un service à améliorer ? Décrivez-le simplement. Nous vous répondrons directement, sans discours commercial préfabriqué.</p>
+    <div class="contact-promises" aria-label="Principes de contact">
+      <span><i>01</i> Un échange direct</span>
+      <span><i>02</i> Une réponse personnelle</span>
+      <span><i>03</i> Une première lecture honnête</span>
+    </div>
+  </div>
+
+  <div class="contact-form-wrap reveal" style="transition-delay:.12s">
+    <form class="contact-form" id="contactForm">
+      <div class="form-row">
+        <label>
+          <span>Votre nom</span>
+          <input name="name" type="text" placeholder="Nom et prénom" autocomplete="name" required />
+        </label>
+        <label>
+          <span>Votre adresse email</span>
+          <input name="email" type="email" placeholder="vous@exemple.com" autocomplete="email" required />
+        </label>
+      </div>
+
+      <div class="form-row">
+        <label>
+          <span>Entreprise <em>facultatif</em></span>
+          <input name="company" type="text" placeholder="Nom de votre activité" autocomplete="organization" />
+        </label>
+        <label>
+          <span>Type de projet</span>
+          <select name="projectType" required>
+            <option value="" disabled selected>Choisir une catégorie</option>
+            <option value="website">Site web</option>
+            <option value="platform">Plateforme numérique</option>
+            <option value="application">Application</option>
+            <option value="other">Autre idée</option>
+          </select>
+        </label>
+      </div>
+
+      <label>
+        <span>Parlez-nous de votre idée</span>
+        <textarea name="message" rows="6" placeholder="Le besoin, les personnes concernées et ce que vous aimeriez rendre possible…" required></textarea>
+      </label>
+
+      <div class="form-submit-row">
+        <p>L’envoi sera connecté dès que l’adresse professionnelle du studio sera choisie.</p>
+        <button class="primary-button" type="submit">Préparer la demande <span aria-hidden="true">↗</span></button>
+      </div>
+
+      <p class="form-preview-message" id="formPreviewMessage" role="status" hidden>Le formulaire est prêt. Son envoi sera activé avec l’adresse professionnelle du studio.</p>
+    </form>
+  </div>
+</section>
+
+<section class="closing-section">
+  <div class="reveal">
+    <p class="eyebrow">La prochaine ligne</p>
+    <h2>Votre idée.<br /><em>Notre prochain chapitre.</em></h2>
+  </div>
+  <div class="closing-amp reveal" style="transition-delay:.12s">&amp;</div>
+</section>
+
+<footer>
+  <a class="brand footer-brand" href="#top">
+    <span class="wordmark wordmark-footer" aria-label="Code &amp; Character">
+      <span class="wordmark-code">CODE</span>
+      <span class="wordmark-amp" aria-hidden="true">&amp;</span>
+      <span class="wordmark-character">CHARACTER</span>
+    </span>
+  </a>
+  <p>Digital products with a point of view.</p>
+  <div class="footer-links"><a href="#contact">Contact</a><a href="#top">Retour en haut ↑</a></div>
+</footer>
+
+<div class="video-backdrop" id="videoBackdrop">
+  <div class="video-dialog" role="dialog" aria-modal="true" aria-label="Film de présentation Dewini">
+    <div class="video-dialog-header">
+      <div><span>Projet 01</span><strong>Dewini — Film de présentation</strong></div>
+      <button type="button" id="videoCloseBtn" aria-label="Fermer la vidéo">×</button>
+    </div>
+    <video controls playsinline preload="none" poster="assets/dewini-home.png" src="assets/dewini-explainer-fr.mp4" id="projectVideo">
+      Votre navigateur ne prend pas en charge la lecture vidéo.
+    </video>
+  </div>
+</div>
+
+</main>
+
+<script>
+(function () {
+  var revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in-view');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -80px 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+  } else {
+    revealEls.forEach(function (el) { el.classList.add('in-view'); });
+  }
+
+  var videoOpenBtn = document.getElementById('watchFilmBtn');
+  var videoBackdrop = document.getElementById('videoBackdrop');
+  var videoCloseBtn = document.getElementById('videoCloseBtn');
+  var videoEl = document.getElementById('projectVideo');
+
+  function openVideo() {
+    videoBackdrop.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    videoCloseBtn.focus();
+  }
+  function closeVideo() {
+    videoBackdrop.classList.remove('open');
+    document.body.style.overflow = '';
+    videoEl.pause();
+    videoEl.currentTime = 0;
+    videoOpenBtn.focus();
+  }
+
+  videoOpenBtn.addEventListener('click', openVideo);
+  videoCloseBtn.addEventListener('click', closeVideo);
+  videoBackdrop.addEventListener('mousedown', function (e) {
+    if (e.target === videoBackdrop) closeVideo();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeVideo();
+  });
+
+  var form = document.getElementById('contactForm');
+  var previewMsg = document.getElementById('formPreviewMessage');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    previewMsg.hidden = false;
+  });
+})();
+</script>
+
+</body>
+</html>
