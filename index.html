@@ -426,7 +426,11 @@ footer p { margin: 0; font-family: var(--serif); font-style: italic; }
   </div>
 
   <div class="contact-form-wrap reveal" style="transition-delay:.12s">
-    <form class="contact-form" id="contactForm">
+    <form
+      class="contact-form"
+      id="contactForm"
+      action="https://formspree.io/f/xdenpobz"
+      method="POST"
       <div class="form-row">
         <label>
           <span>Votre nom</span>
@@ -461,11 +465,12 @@ footer p { margin: 0; font-family: var(--serif); font-style: italic; }
       </label>
 
       <div class="form-submit-row">
-        <p>L’envoi sera connecté dès que l’adresse professionnelle du studio sera choisie.</p>
-        <button class="primary-button" type="submit">Préparer la demande <span aria-hidden="true">↗</span></button>
-      </div>
+        <p>Nous recevons votre demande directement et vous répondons personnellement.</p>      
+      <button class="primary-button" type="submit" id="contactSubmit">
+        Envoyer la demande <span aria-hidden="true">↗</span>
+      </button>      </div>
 
-      <p class="form-preview-message" id="formPreviewMessage" role="status" hidden>Le formulaire est prêt. Son envoi sera activé avec l’adresse professionnelle du studio.</p>
+      <p class="form-preview-message" id="formPreviewMessage" role="status" hidden></p>
     </form>
   </div>
 </section>
@@ -549,10 +554,45 @@ footer p { margin: 0; font-family: var(--serif); font-style: italic; }
   });
 
   var form = document.getElementById('contactForm');
-  var previewMsg = document.getElementById('formPreviewMessage');
-  form.addEventListener('submit', function (e) {
-    e.preventDefault();
+var previewMsg = document.getElementById('formPreviewMessage');
+var submitBtn = document.getElementById('contactSubmit');
+
+form.addEventListener('submit', async function (e) {
+  e.preventDefault();
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Envoi en cours…';
+  previewMsg.hidden = true;
+
+  try {
+    var response = await fetch(form.action, {
+      method: 'POST',
+      body: new FormData(form),
+      headers: {
+        'Accept': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      previewMsg.textContent =
+        'Merci. Votre demande a bien été envoyée. Nous vous répondrons rapidement.';
+      previewMsg.hidden = false;
+      form.reset();
+    } else {
+      previewMsg.textContent =
+        'Une erreur est survenue. Veuillez réessayer dans quelques instants.';
+      previewMsg.hidden = false;
+    }
+  } catch (error) {
+    previewMsg.textContent =
+      'Impossible d’envoyer la demande pour le moment. Veuillez réessayer.';
     previewMsg.hidden = false;
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.innerHTML =
+      'Envoyer la demande <span aria-hidden="true">↗</span>';
+  }
+});
   });
 })();
 </script>
